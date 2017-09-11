@@ -1,3 +1,87 @@
+#!/bin/bash
+
+########################################
+#
+# Ilya Vasilyev aka Nadz Goldman
+# 2017
+# ilya@arviol.ru
+# 
+########################################
+
+
+
+
+
+
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
+echo "Making locales more candy"
+
+locale-gen en_US en_US.UTF-8 ru_RU ru_RU.UTF-8
+dpkg-reconfigure locales
+export LC_ALL="ru_RU.UTF-8"
+
+
+
+echo "Updating info from repo and upgrading packages"
+
+apt-get update -y
+apt-get upgrade -y
+
+
+
+echo "Removing bad and installing good packages"
+
+apt-get remove -y apparmor whoopsie avahi-daemon ristretto apport gnome-screensaver
+apt-get install -y --no-install-recommends  mc zsh sshfs exfat-fuse exfat-utils aptitude git locate glances atop htop nmap unzip p7zip p7zip-rar rar unrar-free p7zip-full tcpdump ntpdate
+
+
+echo "chmod-ing not usable services in Ubuntu"
+
+chmod -x /etc/init.d/apport
+chmod -x /etc/init.d/avahi-daemon
+chmod -x /etc/init.d/bluetooth
+chmod -x /etc/init.d/brltty
+chmod -x /etc/init.d/cups
+chmod -x /etc/init.d/cups-browsed
+chmod -x /etc/init.d/nmbd
+chmod -x /etc/init.d/rsync
+chmod -x /etc/init.d/samba
+chmod -x /etc/init.d/samba-ad-dc
+chmod -x /etc/init.d/saned
+chmod -x /etc/init.d/smbd
+chmod -x /etc/init.d/speech-dispatcher
+chmod -x /etc/init.d/unattended-upgrades
+chmod -x /etc/init.d/winbind
+
+
+
+
+echo "Disabling MOtD"
+
+chmod -x /etc/update-motd.d/*
+
+
+echo "Setting ntpdate to crontab"
+
+cat << EOF >> /etc/crontab
+
+
+10      1       *       *       *       root  ntpdate  ntp4.vniiftri.ru
+10      10      *       *       *       root  ntpdate  ntp2.vniiftri.ru
+
+EOF
+
+
+
+echo "Installing .zshrc"
+
+
+cat << EOF > ~root/.zshrc
+
 
 autoload -U compinit
 compinit
@@ -9,22 +93,11 @@ autoload -U predict-on
 zle -N predict-on
 
 
-#tail ~ilya/ololo/NOT_BACKUP.txt
-
-#if [ ${SHLVL} -eq 1 ]; then
-#    ((SHLVL+=1)); export SHLVL
-#    exec screen -R -e "^Ee" ${SHELL} -l
-#fi
-
 
 ###
 ### Cvetastyj prompt i chasiki
 ###
 
-#PROMPT=$'%{\e[1;32m%}[%{\e[1;34m%}%~%{\e[1;32m%}]%{\e[1;32m%}%#%{\e0%} '
-#RPROMPT=$'%{\e[1;32m%}[%{\e[1;34m%}%T%{\e[1;32m%}]%{\e0%}'
-#PROMPT=$'%{\e[1;32m%}[%{\e[1;34m%}%T%  %~%{\e[1;32m%}]%{\e[1;32m%}%#%{\e0%} '
-#PROMPT=$'%T%  %~%  # '
 PROMPT=$'%T %n@%M [%B%d%b]%# '
 
 
@@ -60,17 +133,14 @@ LC_TIME=POSIX;          export LC_TIME
 ##  ALIASES  ##
 ###############
 
-alias w="cd /usr/local/www/"
-alias u="cd /usr/local/etc/"
 alias v="cd /var/log/"
-alias n="cd /usr/local/etc/nagios"
 alias l="ls -AFGSahl"
 alias t="telnet"
 alias p="ping"
 alias sh="cat"
 alias i="grep -iE "
 alias e="grep -viE "
-alias en="su -m"
+alias en="sudo su -m"
 
 
 
@@ -96,6 +166,10 @@ bindkey '^[[A' up-line-or-search
 bindkey '^[[D' backward-char
 bindkey '^[[B' down-line-or-search
 bindkey '^[[C' forward-char
+
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
 # completion in the middle of a line
 bindkey '^i' expand-or-complete-prefix
 
@@ -133,4 +207,37 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*' word true
 
 
+
+EOF
+
+
+
+echo "Making .vimrc"
+
+cat << EOF > ~root/.vimrc
+
+version 6.0
+if &cp | set nocp | endif
+let s:cpo_save=&cpo
+set cpo&vim
+nmap gx <Plug>NetrwBrowseX
+nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
+let &cpo=s:cpo_save
+unlet s:cpo_save
+set background=dark
+set backspace=indent,eol,start
+set fileencodings=ucs-bom,utf-8,default,latin1
+set helplang=en
+set history=50
+set nomodeline
+set printoptions=paper:a4
+set ruler
+set runtimepath=~/.vim,/var/lib/vim/addons,/usr/share/vim/vimfiles,/usr/share/vim/vim74,/usr/share/vim/vimfiles/after,/var/lib/vim/addons/after,~/.vim/after
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
+" vim: set ft=vim :
+
+EOF
+
+
+echo "All done, folks!"
 
