@@ -1,0 +1,3 @@
+spool/*
+cache/*
+/some/path/to/something/and/exclude/something/from/dir/*
