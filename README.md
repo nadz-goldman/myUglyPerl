@@ -1,1 +1,1 @@
-# myUglyPerl
+# myUglyPerlSimple scripts for comfortable life
