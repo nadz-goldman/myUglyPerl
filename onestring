@@ -1,0 +1,127 @@
+
+# Just one-string bash commands ( for Ubuntu mainly )
+
+
+## Purge all configs:
+aptitude purge ~c
+---
+
+
+## absolute path to file:
+find `pwd` -name filename
+---
+
+## ca-cert:
+mkdir /usr/local/share/ca-certificates/cacert.org
+wget -P /usr/local/share/ca-certificates/cacert.org http://www.cacert.org/certs/root.crt http://www.cacert.org/certs/class3.crt
+update-ca-certificates
+---
+
+## grep php comment
+grep -Ev "(//|/\*| \*|^$)"
+---
+
+## locale:
+locale-gen en_US en_US.UTF-8 ru_RU ru_RU.UTF-8
+dpkg-reconfigure locales
+export LC_ALL="ru_RU.UTF-8"
+---
+
+## Ubuntu disable MOtD
+chmod -x /etc/update-motd.d/*
+---
+
+## openntpd
+
+apt-get install openntpd
+
+myAddr=$( ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' )
+
+cat << EOF > /etc/openntpd/ntpd.conf
+
+listen on $myAddr
+servers ntp1.vniiftri.ru
+servers ntp2.vniiftri.ru
+servers ntp3.vniiftri.ru
+servers ntp4.vniiftri.ru
+servers ntp21.vniiftri.ru
+
+EOF
+
+service openntpd restart
+service openntpd status
+---
+
+## iptables any any
+
+#!/bin/sh
+iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+---
+
+## Select JAVA version
+
+update-alternatives --config java
+---
+
+## memory top using
+ps aux --sort=-%mem | awk 'NR<=10{print $0}'
+---
+
+## apache uniq clients
+cat access.log | awk '{print $1}' | sort -n | uniq -c | sort -nr | head -20
+---
+
+## iptables block host ( add to chain INPUT source IP )
+iptables -A INPUT -s IP.ADD.RE.SS -j DROP
+---
+
+## Change bitrate
+
+for f in *.mp3 ; do lame --mp3input -b <bitrate> "$f" <path_to_destination>/"$f" ; done 
+---
+
+## FreeBSD NAT top users
+ipnat -l | awk '{print $2\' | sort | uniq -c | sort -r | grep "10.20." > top.txt
+---
+
+## Disable iptables conntrack
+
+*Just sample*
+
+cat /etc/modprobe.d/blacklist.conf
+...
+modprobe -r xt_NOTRACK
+modprobe -r nf_conntrack_netbios_ns
+modprobe -r nf_conntrack_ipv4
+modprobe -r xt_state
+modprobe -r nf_conntrac
+...
+
+cat /etc/sysconfig/iptables
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [62:18176]
+-A INPUT -p tcp -j ACCEPT 
+-A INPUT -p udp -j ACCEPT 
+COMMIT
+
+*raw
+:PREROUTING ACCEPT [134:22918]
+:OUTPUT ACCEPT [5:420]
+-A PREROUTING -j NOTRACK 
+-A OUTPUT -p tcp -j ACCEPT 
+-A OUTPUT -p udp -j ACCEPT 
+COMMIT
+---
+
+
+

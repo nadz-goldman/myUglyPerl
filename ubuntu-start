@@ -1,0 +1,150 @@
+# NOT FOR PRODUCTION =)
+
+```bash
+#!/bin/bash
+
+im=$(whoami)
+myTab="$(printf '\t')"
+
+cd ~$im
+mkdir myTmp
+cd myTmp/
+
+apt-get remove -y apparmor whoopsie avahi-daemon ristretto apport gnome-screensaver
+
+apt-get update -y
+apt-get upgrade -y
+
+add-apt-repository ppa:nilarimogard/webupd8
+add-apt-repository ppa:indicator-multiload/stable-daily
+add-apt-repository ppa:atareao/atareao
+add-apt-repository ppa:caffeine-developers/ppa
+add-apt-repository ppa:caffeine-developers/ppa
+add-apt-repository ppa:leolik/leolik
+add-apt-repository ppa:nilarimogard/webupd8
+add-apt-repository ppa:webupd8team/java
+add-apt-repository ppa:webupd8team/y-ppa-manager
+add-apt-repository ppa:webupd8team/gnome3
+add-apt-repository ppa:danielrichter2007/grub-customizer
+
+apt-get update -y
+apt-get upgrade  -y
+
+pkill notify-osd
+apt-get install -y indicator-multiload calendar-indicator indicator-weather caffeine python-glade2 libnotify-bin xscreensaver xscreensaver-gl-extra xscreensaver-data-extra notifyosdconfig oracle-java7-installer y-ppa-manager gnome-shell-extensions terminator mc zsh gnome-session-fallback vlc vlc-data vlc-plugin-fluidsynth vlc-plugin-jack vlc-plugin-notify vlc-plugin-pulse vlc-plugin-sdl vlc-plugin-svg vlc-plugin-zvbi phonon-backend-vlc mozilla-plugin-vlc libvlccore5 libvlc5 browser-plugin-vlc qutim sshfs grub-customizer
+apt-get install -y --no-install-recommends exfat-fuse exfat-utils zsh aptitude sshfs chromium-browser yakuake console-terminus xfonts-terminus xfonts-terminus-dos xfonts-terminus-oblique git mc cifs-utils locate glances atop htop pepperflashplugin-nonfree ubuntu-minimal powertop nmap openssh-server powertop synaptic mysql-client lm-sensors xfce4-sensors-plugin xfce4-goodies xfce4-artwork wine unzip p7zip p7zip-rar rar unrar-free p7zip-full fancontrol smartmontools cu minicom lame ttf-mscorefonts-installer fonts-horai-umefont fonts-unfonts-core ttf-wqy-microhei winbind winetricks tcpdump skype
+
+ln -s /usr/bin/xscreensaver-command /usr/bin/gnome-screensaver-command
+sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop
+mv /usr/lib/x86_64-linux-gnu/gstreamer-0.10/libgstvideoparsersbad.so /usr/lib/x86_64-linux-gnu/gstreamer-0.10/libgstvideoparsersbad.so.bak
+
+# dlya sshfs
+gpasswd -a $USER fuse
+mkdir ~/remote
+mkdir ~/remote/srv1
+mkdir ~/remote/srv2
+mkdir ~/remote/srv3
+
+sshfs -o idmap=user $USER@srv1:/home/$user ~/remote/srv1
+sshfs -o idmap=user $USER@srv2:/home/$user ~/remote/srv2
+sshfs -o idmap=user $USER@srv3:/home/$user ~/remote/srv3
+
+wget -O deadbeef.deb "https://sourceforge.net/projects/deadbeef/files/debian/deadbeef-static_0.7.2-2_i386.deb/download" \
+&& wget -O transgui.zip "https://sourceforge.net/projects/transgui/files/5.0.1/transgui-5.0.1-i386-linux.zip/download" \
+&& wget -O xnview.deb "http://download.xnview.com/XnViewMP-linux.deb" \
+# && wget -O eee-ubuntu-tweaks.tgz "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/eee-ubuntu-support/eee-ubuntu-support_v0.7.tgz"
+
+dpkg -i xnview.deb deadbeef.deb
+
+mkdir -p ~$im/myBin/transgui/
+unzip transgui.zip -d ~$im/myBin/transgui/
+
+
+rm transgui.zip
+rm xnview.deb
+rm deadbeef.deb
+
+echo "$im ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+
+chmod -x /etc/init.d/apport
+chmod -x /etc/init.d/avahi-daemon
+chmod -x /etc/init.d/bluetooth
+chmod -x /etc/init.d/brltty
+chmod -x /etc/init.d/cups
+chmod -x /etc/init.d/cups-browsed
+chmod -x /etc/init.d/nmbd
+chmod -x /etc/init.d/rsync
+chmod -x /etc/init.d/samba
+chmod -x /etc/init.d/samba-ad-dc
+chmod -x /etc/init.d/saned
+chmod -x /etc/init.d/smbd
+chmod -x /etc/init.d/speech-dispatcher
+chmod -x /etc/init.d/unattended-upgrades
+chmod -x /etc/init.d/winbind
+
+
+
+cp /etc/sysctl.conf /etc/sysctl.conf.bak
+cat <<EOF>>/etc/sysctl.conf
+
+vm.dirty_writeback_centisecs=1500
+kernel.sem = 250 32000 100 128
+kernel.shmall = 2097152
+kernel.shmmax = 2147483648
+kernel.shmmni = 4096
+fs.file-max = 256000
+vm.swappiness = 1
+vm.vfs_cache_pressure = 50
+net.core.rmem_default = 16777216
+net.core.rmem_max = 16777216
+net.core.wmem_default = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 10240 87380 16777216
+net.ipv4.tcp_wmem = 10240 87380 16777216
+net.ipv4.tcp_no_metrics_save = 1
+net.core.netdev_max_backlog = 5000
+
+net.ipv4.tcp_timestamps=0
+net.ipv4.tcp_window_scaling=0
+net.ipv4.tcp_sack=0
+net.ipv4.tcp_max_orphans=1024
+net.ipv4.tcp_max_tw_buckets=4096
+
+net.ipv4.igmp_max_memberships=5
+net.ipv4.igmp_max_msf=5
+net.ipv4.tcp_fack=0
+net.ipv4.tcp_dsack=0
+net.ipv4.tcp_frto=0
+net.ipv4.tcp_reordering=3
+net.ipv4.tcp_ecn=2
+net.ipv4.conf.all.accept_redirects=0
+net.ipv4.conf.default.accept_redirects=0
+net.ipv4.conf.lo.accept_redirects=1
+net.ipv4.ipfrag_high_thresh=262144
+net.ipv4.ipfrag_low_thresh=131072
+net.ipv4.icmp_ratelimit=250
+
+EOF
+
+cp /etc/fstab /etc/fstab.bak
+cat <<EOF>>/etc/fstab
+
+tmpfs${myTab}/tmp${myTab}${myTab}${myTab}${myTab}tmpfs${myTab}defaults${myTab}0${myTab}0
+tmpfs${myTab}/var/tmp${myTab}${myTab}${myTab}tmpfs${myTab}defaults${myTab}0${myTab}0
+tmpfs${myTab}/var/lock${myTab}${myTab}${myTab}tmpfs${myTab}defaults${myTab}0${myTab}0
+tmpfs${myTab}/var/log${myTab}${myTab}${myTab}tmpfs${myTab}defaults${myTab}0${myTab}0
+tmpfs${myTab}/var/cache/apt/archives${myTab}tmpfs${myTab}${myTab}defaults${myTab}0${myTab}0
+EOF
+
+
+
+echo noop > /sys/block/sda/queue/scheduler
+
+cd ~$im
+
+echo "enabled=0" > /etc/default/apport
+
+
+```
+
