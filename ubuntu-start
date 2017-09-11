@@ -1,6 +1,5 @@
 # NOT FOR PRODUCTION =)
 
-```bash
 #!/bin/bash
 
 im=$(whoami)
@@ -146,5 +145,4 @@ cd ~$im
 echo "enabled=0" > /etc/default/apport
 
 
-```
 
