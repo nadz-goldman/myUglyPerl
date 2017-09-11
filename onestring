@@ -1,37 +1,60 @@
 
-# Just one-string bash commands ( for Ubuntu mainly )
+Just one-string bash commands ( for Ubuntu mainly )
 
 
-## Purge all configs:
+
+Purge all configs:
+
 aptitude purge ~c
----
+
+###############################################################################
 
 
-## absolute path to file:
+
+absolute path to file:
+
 find `pwd` -name filename
----
 
-## ca-cert:
+###############################################################################
+
+
+
+ca-cert:
 mkdir /usr/local/share/ca-certificates/cacert.org
 wget -P /usr/local/share/ca-certificates/cacert.org http://www.cacert.org/certs/root.crt http://www.cacert.org/certs/class3.crt
 update-ca-certificates
----
 
-## grep php comment
+###############################################################################
+
+
+
+grep php comment
+
 grep -Ev "(//|/\*| \*|^$)"
----
 
-## locale:
+###############################################################################
+
+
+
+locale:
+
 locale-gen en_US en_US.UTF-8 ru_RU ru_RU.UTF-8
 dpkg-reconfigure locales
 export LC_ALL="ru_RU.UTF-8"
----
 
-## Ubuntu disable MOtD
+###############################################################################
+
+
+
+Ubuntu disable MOtD
+
 chmod -x /etc/update-motd.d/*
----
 
-## openntpd
+###############################################################################
+
+
+
+openntpd
 
 apt-get install openntpd
 
@@ -50,9 +73,12 @@ EOF
 
 service openntpd restart
 service openntpd status
----
 
-## iptables any any
+###############################################################################
+
+
+
+iptables any any
 
 #!/bin/sh
 iptables -F
@@ -64,35 +90,60 @@ iptables -t mangle -X
 iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT
 iptables -P OUTPUT ACCEPT
----
 
-## Select JAVA version
+###############################################################################
+
+
+
+Select JAVA version
 
 update-alternatives --config java
----
 
-## memory top using
+###############################################################################
+
+
+
+memory top using
+
 ps aux --sort=-%mem | awk 'NR<=10{print $0}'
----
 
-## apache uniq clients
+###############################################################################
+
+
+
+apache uniq clients
+
 cat access.log | awk '{print $1}' | sort -n | uniq -c | sort -nr | head -20
----
 
-## iptables block host ( add to chain INPUT source IP )
+###############################################################################
+
+
+
+iptables block host ( add to chain INPUT source IP )
+
 iptables -A INPUT -s IP.ADD.RE.SS -j DROP
----
 
-## Change bitrate
+###############################################################################
+
+
+
+Change bitrate
 
 for f in *.mp3 ; do lame --mp3input -b <bitrate> "$f" <path_to_destination>/"$f" ; done 
----
 
-## FreeBSD NAT top users
+###############################################################################
+
+
+
+FreeBSD NAT top users
+
 ipnat -l | awk '{print $2\' | sort | uniq -c | sort -r | grep "10.20." > top.txt
----
 
-## Disable iptables conntrack
+###############################################################################
+
+
+
+Disable iptables conntrack
 
 *Just sample*
 
@@ -121,7 +172,8 @@ COMMIT
 -A OUTPUT -p tcp -j ACCEPT 
 -A OUTPUT -p udp -j ACCEPT 
 COMMIT
----
+
+###############################################################################
 
 
 
