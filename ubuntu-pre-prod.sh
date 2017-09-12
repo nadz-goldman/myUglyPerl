@@ -239,5 +239,18 @@ set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.i
 EOF
 
 
-echo "All done, folks!"
+echo "Disabling IPv6"
 
+echo "### Disable IPv6" >> /etc/sysctl.conf
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
+
+sysctl -p
+
+echo "If you see 1 below this line, then IPv6 disabled. If not - try again"
+
+cat /proc/sys/net/ipv6/conf/all/disable_ipv6
+
+
+echo "All done, folks!"
