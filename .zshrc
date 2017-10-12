@@ -1,4 +1,3 @@
-
 autoload -U compinit
 compinit
 autoload -U incremental-complete-word
@@ -7,14 +6,6 @@ autoload -U insert-files
 zle -N insert-files
 autoload -U predict-on
 zle -N predict-on
-
-
-#tail ~ilya/ololo/NOT_BACKUP.txt
-
-#if [ ${SHLVL} -eq 1 ]; then
-#    ((SHLVL+=1)); export SHLVL
-#    exec screen -R -e "^Ee" ${SHELL} -l
-#fi
 
 
 ###
@@ -34,8 +25,8 @@ PROMPT=$'%T %n@%M [%B%d%b]%# '
 ###
 
 HISTFILE=~/.ZSh_history
-SAVEHIST=5000
-HISTSIZE=5000
+SAVEHIST=50000
+HISTSIZE=50000
 
 setopt APPEND_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
@@ -43,17 +34,15 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
 
-export EDITOR  ee
-export VISUAL  ee
-export PAGER   less
-export BLOCKSIZE       K
+export EDITOR    vim
+export VISUAL    vim 
+export PAGER     less
+export BLOCKSIZE K
 
-
-BLOCKSIZE=K;            export BLOCKSIZE
-EDITOR=mcedit;          export EDITOR
-PAGER=less;             export PAGER
-#LANG=ru_RU.KOI8-R;      export LANG
-LC_TIME=POSIX;          export LC_TIME
+BLOCKSIZE=K;    export BLOCKSIZE
+EDITOR=vim;     export EDITOR
+PAGER=less;     export PAGER
+#LC_TIME=POSIX; export LC_TIME
 
 
 ###############
@@ -61,18 +50,15 @@ LC_TIME=POSIX;          export LC_TIME
 ###############
 
 alias w="cd /usr/local/www/"
-alias u="cd /usr/local/etc/"
+alias etc="cd /usr/local/etc/"
 alias v="cd /var/log/"
-alias n="cd /usr/local/etc/nagios"
-alias l="ls -AFGSahl"
+alias l="ls -ahl"
 alias t="telnet"
 alias p="ping"
 alias sh="cat"
 alias i="grep -iE "
 alias e="grep -viE "
-alias en="su -m"
-
-
+alias en="sudo su -m"
 
 echo "================================"
 last -10
@@ -96,6 +82,10 @@ bindkey '^[[A' up-line-or-search
 bindkey '^[[D' backward-char
 bindkey '^[[B' down-line-or-search
 bindkey '^[[C' forward-char
+
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
 # completion in the middle of a line
 bindkey '^i' expand-or-complete-prefix
 
@@ -131,6 +121,3 @@ zstyle ':completion:*' substitute 1
 zstyle ':completion:*' use-compctl true
 zstyle ':completion:*' verbose true
 zstyle ':completion:*' word true
-
-
-

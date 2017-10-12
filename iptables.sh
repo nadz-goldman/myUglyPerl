@@ -1,15 +1,12 @@
 #!/bin/bash
-IPT="/sbin/iptables"
-EC="/bin/echo"
-
+IPT=$( which iptables )
+EC=$( which echo )
 ### Administrative hosts
-ADMINS="10.0.0.0/8 192.168.0.0/16"
-
+ADMINS="192.168.192.0/24 10.20.30.40"
 ### TCP services ports
-ACCPOTCP=""
-
+ACCPOTCP="22 80"
 ### UDP services ports
-ACCPOUDP=""
+ACCPOUDP="51"
  
 case $1 in
 stop)
@@ -19,19 +16,22 @@ stop)
     $IPT --table nat --delete-chain
     $IPT --table filter --flush
     $IPT --table filter --delete-chain
+    $IPT --table mangle --flush
+    $IPT --table mangle --delete-chain
     $IPT -t filter -P INPUT ACCEPT
     $IPT -t filter -P OUTPUT ACCEPT
     $IPT -t filter -P FORWARD ACCEPT
-    $EC "Firewall stopped"
+    $EC "Firewall in state permit any-any"
 ;;
  
 status)
-    $IPT --list
+    $IPT -L -n -v --line-numbers
 ;;
  
 restart|reload)
     $0 stop
     $0 start
+    $0 status
 ;;
  
 start)
@@ -41,6 +41,8 @@ start)
     $IPT --table nat --delete-chain
     $IPT --table filter --flush
     $IPT --table filter --delete-chain
+    $IPT --table mangle --flush
+    $IPT --table mangle --delete-chain
     $IPT -P INPUT DROP
     $IPT -P OUTPUT ACCEPT
     $IPT -F INPUT
@@ -48,12 +50,19 @@ start)
     $IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
     $IPT -A INPUT -i lo -j ACCEPT
 
-
     ### LDAP
-    $IPT -A INPUT -p tcp --dport 389 -s 127.0.0.0/8 -j ACCEPT -m comment --comment "LDAP only for local instance - ALLOW LOCALHOST ( port 389 )"
-    $IPT -A INPUT -p tcp --dport 636 -s 127.0.0.0/8 -j ACCEPT -m comment --comment "LDAP only for local instance - ALLOW LOCALHOST ( port 636 )"
-    $IPT -A INPUT -p tcp --dport 389 -j DROP -m comment --comment "LDAP only for local instance - DROP"
-    $IPT -A INPUT -p tcp --dport 636 -j DROP -m comment --comment "LDAP only for local instance - DROP"
+    $IPT -A INPUT -p tcp --dport 389 -s 10.0.0.1 -j ACCEPT -m comment --comment "LDAP - ALLOW LOCAL PC ( port 389 )"
+    $IPT -A INPUT -p tcp --dport 636 -s 10.0.0.1 -j ACCEPT -m comment --comment "LDAP - ALLOW LOCAL PC ( port 636 )"
+
+    ### LIGHTHTTPD
+    $IPT -A INPUT -p tcp --dport 80 -j ACCEPT -m comment --comment "LightHTTPd ACCEPT FROM ANY"
+    $IPT -A INPUT -p tcp --dport 443 -j ACCEPT -m comment --comment "LightHTTPd ACCEPT FROM ANY"
+
+    ### RADIUS drop unknown clients
+    $IPT -A INPUT -p tcp --dport 1812 -j DROP -m comment --comment "RADIUS only for friends - DROP"
+    $IPT -A INPUT -p udp --dport 1812 -j DROP -m comment --comment "RADIUS only for friends - DROP"
+    $IPT -A INPUT -p tcp --dport 1813 -j DROP -m comment --comment "RADIUS only for friends - DROP"
+    $IPT -A INPUT -p udp --dport 1813 -j DROP -m comment --comment "RADIUS only for friends - DROP"
 
     ### Admins
     for admin_ips in $ADMINS;
@@ -71,9 +80,6 @@ start)
     $IPT -A INPUT -p tcp --tcp-flags ACK,URG URG -j DROP
     $IPT -A OUTPUT -p icmp --icmp-type timestamp-reply -j DROP
     $IPT -A INPUT -p icmp --icmp-type 8 -j ACCEPT
-
-
-
 
     #### Open ports
     ### TCP
@@ -94,7 +100,7 @@ start)
     fi
 
 
-    $EC "Firewall started"
+    $EC "Firewall in secured state"
 ;;
  
 *)
@@ -104,4 +110,3 @@ start)
 esac
  
 exit 0
-
