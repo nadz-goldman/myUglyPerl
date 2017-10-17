@@ -182,3 +182,16 @@ sed -e 's/<[^>]*>//g' filename
 
 ###############################################################################
 
+
+
+Generate username|password|salt|etc
+
+UserName=$( tr -c -d 'abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo )
+PassWord=$( tr -c -d '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo )
+
+Really UNIX-like passgen =)
+# $password = `date | md5sum | fold -w 10 | head -n 1`;
+# $password = crypt($password,'some_string');
+
+###############################################################################
+
