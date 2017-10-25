@@ -36,7 +36,7 @@ apt-get upgrade -y
 echo "Lets remove bad and install good packages"
 
 apt-get remove -y apparmor whoopsie avahi-daemon ristretto apport gnome-screensaver
-apt-get install -y --no-install-recommends  mc zsh sshfs exfat-fuse exfat-utils aptitude git locate glances atop htop nmap unzip p7zip p7zip-rar rar unrar-free p7zip-full tcpdump ntpdate
+apt-get install -y --no-install-recommends  mc zsh sshfs exfat-fuse exfat-utils aptitude git locate htop nmap zip unzip p7zip p7zip-rar rar unrar-free p7zip-full tcpdump ntpdate atop 
 
 
 echo "chmod-ing out not usable services in Ubuntu"

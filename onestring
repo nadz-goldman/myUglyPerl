@@ -195,3 +195,10 @@ Really UNIX-like passgen =)
 
 ###############################################################################
 
+
+
+CPAN install many modules at once
+
+perl -MCPAN -e'install($_) for qw( FindBin Cwd Config::Simple Exporter Data::Dumper utf8 File::Slurp CGI Net::LDAP MIME::Base64 Digest::SHA1 Encode CGI::Carp Email::MIME Email::Sender::Simple )'
+
+###############################################################################
