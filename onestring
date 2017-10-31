@@ -36,6 +36,14 @@ grep -Ev "(//|/\*| \*|^$)"
 
 
 
+grep bash comment
+
+awk '$1 ~ /^[^;#]/' config.file
+
+###############################################################################
+
+
+
 locale:
 
 locale-gen en_US en_US.UTF-8 ru_RU ru_RU.UTF-8
