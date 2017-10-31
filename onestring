@@ -202,3 +202,17 @@ CPAN install many modules at once
 perl -MCPAN -e'install($_) for qw( FindBin Cwd Config::Simple Exporter Data::Dumper utf8 File::Slurp CGI Net::LDAP MIME::Base64 Digest::SHA1 Encode CGI::Carp Email::MIME Email::Sender::Simple )'
 
 ###############################################################################
+
+
+
+Generate SSL cert and key
+
+# cert && key
+openssl req -newkey rsa:2048 -nodes -keyout domain.key -x509 -days 365 -out domain.crt
+
+# show cert info
+openssl x509 -text -noout -in domain.crt
+
+
+
+
