@@ -119,6 +119,11 @@ ps aux --sort=-%mem | awk 'NR<=10{print $0}'
 
 
 
+process memory 
+ps -eo size,pid,user,command --sort -size | awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |cut -d "" -f2 | cut -d "-" -f1 | grep -v "0\.00 Mb"
+
+###############################################################################
+
 apache uniq clients
 
 cat access.log | awk '{print $1}' | sort -n | uniq -c | sort -nr | head -20
