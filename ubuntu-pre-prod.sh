@@ -38,7 +38,6 @@ echo "Lets remove bad and install good packages"
 apt-get remove -y apparmor whoopsie avahi-daemon ristretto apport gnome-screensaver
 apt-get install -y --no-install-recommends  mc zsh sshfs exfat-fuse exfat-utils aptitude git locate htop nmap zip unzip p7zip p7zip-rar rar unrar-free p7zip-full tcpdump ntpdate atop 
 
-
 echo "chmod-ing out not usable services in Ubuntu"
 
 chmod -x /etc/init.d/apport
@@ -115,5 +114,7 @@ echo "If you see 1 below this line, then IPv6 disabled. If not - try again"
 
 cat /proc/sys/net/ipv6/conf/all/disable_ipv6
 
+echo "Cleaning entities after removing"
+aptitude purge ~c
 
 echo "All done, folks!"
