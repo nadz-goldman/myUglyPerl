@@ -226,6 +226,6 @@ openssl req -newkey rsa:2048 -nodes -keyout domain.key -x509 -days 365 -out doma
 # show cert info
 openssl x509 -text -noout -in domain.crt
 
-
+openssl rsa -des3 -in unencrypted.key -out encrypted.key
 
 

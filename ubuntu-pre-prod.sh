@@ -75,7 +75,7 @@ EOF
 
 echo "Making .vimrc"
 
-cat << EOF > ~/.vimrc
+cat << EOF >> ~/.vimrc
 
 version 6.0
 if &cp | set nocp | endif
