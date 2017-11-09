@@ -117,4 +117,7 @@ cat /proc/sys/net/ipv6/conf/all/disable_ipv6
 echo "Cleaning entities after removing"
 aptitude purge ~c
 
+echo "Updating locate database"
+updatedb
+
 echo "All done, folks!"
