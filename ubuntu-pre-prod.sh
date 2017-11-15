@@ -120,4 +120,7 @@ aptitude purge ~c
 echo "Updating locate database"
 updatedb
 
+echo "Disabling ufw"
+ufw disable
+
 echo "All done, folks!"

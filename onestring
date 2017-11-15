@@ -228,4 +228,20 @@ openssl x509 -text -noout -in domain.crt
 
 openssl rsa -des3 -in unencrypted.key -out encrypted.key
 
+--
+
+To generate the private key run this command on the terminal:
+openssl genrsa -out cert/oauth2_module.pem 2048
+
+If you want to provide a passphrase for your private key run this command instead:
+openssl genrsa -passout pass:_passphrase_ -out cert/oauth2_module.pem 1024
+
+then extract the public key from the private key:
+openssl rsa -in cert/oauth2_module.pem -pubout -out cert/oauth2_module.crt
+
+or use your passphrase if provided on private key generation:
+openssl rsa -in cert/oauth2_module.pem -passin pass:_passphrase_ -pubout -out cert/oauth2_module.crt
+
+
+
 
