@@ -1,6 +1,8 @@
-
-Just one-string bash commands ( for Ubuntu mainly )
-
+###############################################################################
+##
+##  Just one-string bash commands ( for Ubuntu mainly )
+##
+###############################################################################
 
 
 Purge all configs:
@@ -181,9 +183,9 @@ COMMIT
 *raw
 :PREROUTING ACCEPT [134:22918]
 :OUTPUT ACCEPT [5:420]
--A PREROUTING -j NOTRACK 
--A OUTPUT -p tcp -j ACCEPT 
--A OUTPUT -p udp -j ACCEPT 
+-A PREROUTING -j NOTRACK
+-A OUTPUT -p tcp -j ACCEPT
+-A OUTPUT -p udp -j ACCEPT
 COMMIT
 
 ###############################################################################
@@ -241,6 +243,19 @@ openssl rsa -in cert/oauth2_module.pem -pubout -out cert/oauth2_module.crt
 
 or use your passphrase if provided on private key generation:
 openssl rsa -in cert/oauth2_module.pem -passin pass:_passphrase_ -pubout -out cert/oauth2_module.crt
+
+###############################################################################
+
+
+
+mysql  ( вечно забываю, потому что редко пользуюсь =)
+
+create database `dbname` default character set utf8;
+create user 'dbnameUser'@'localhost' identified by 'password';
+grant all privileges on dbname.* to 'dbnameUser'@'localhost';
+flush privileges;
+exit;
+
 
 
 
