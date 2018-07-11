@@ -280,4 +280,9 @@ ssh-add -l
     -X -- Разблокировать агента 
 
 
+###############################################################################
+
+Delete files with zero size
+
+find /some/path -size  0 -print0 | xargs -0 rm --
 
