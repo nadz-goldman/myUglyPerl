@@ -123,4 +123,49 @@ updatedb
 echo "Disabling ufw"
 ufw disable
 
+echo "Cleaning local repo"
+
+R=$( lsb_release -c | awk '{print $2}' )
+if [ "$R" = "trusty" ] ; then 
+        echo "Ok, we have trusty here"
+mv /etc/apt/sources.list /etc/apt/sources.list-LOCAL
+
+echo "
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty main restricted
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty main restricted
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty universe
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty universe
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates universe
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates universe
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb http://security.ubuntu.com/ubuntu trusty-security universe
+deb-src http://security.ubuntu.com/ubuntu trusty-security universe
+deb http://security.ubuntu.com/ubuntu trusty-security multiverse
+deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
+
+deb http://archive.canonical.com/ubuntu trusty partner
+
+deb http://extras.ubuntu.com/ubuntu trusty main
+deb-src http://extras.ubuntu.com/ubuntu trusty main
+" > /etc/apt/sources.list
+
+else 
+        echo "Hmmm... Not trusty? Nadz?"
+fi
+
+
 echo "All done, folks!"
