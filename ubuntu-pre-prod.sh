@@ -18,20 +18,62 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# Sometimes some admins make local repos with very old packages
+
+echo "Cleaning local repo"
+
+R=$( lsb_release -c | awk '{print $2}' )
+if [ "$R" = "trusty" ] ; then 
+  echo "Ok, we have trusty here"
+  mv /etc/apt/sources.list /etc/apt/sources.list-LOCAL
+  echo "
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty main restricted
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty main restricted
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty universe
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty universe
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates universe
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates universe
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+
+deb http://ru.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb http://security.ubuntu.com/ubuntu trusty-security universe
+deb-src http://security.ubuntu.com/ubuntu trusty-security universe
+deb http://security.ubuntu.com/ubuntu trusty-security multiverse
+deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
+
+deb http://archive.canonical.com/ubuntu trusty partner
+
+deb http://extras.ubuntu.com/ubuntu trusty main
+deb-src http://extras.ubuntu.com/ubuntu trusty main
+" > /etc/apt/sources.list
+
+else 
+  echo "Hmmm... Not trusty? Nadz?"
+fi
+
+
 echo "Making locales more candy"
 
 locale-gen en_US en_US.UTF-8 ru_RU ru_RU.UTF-8
 dpkg-reconfigure locales
 export LC_ALL="ru_RU.UTF-8"
 
-
-
 echo "Updating info from repo and upgrading packages"
 
 apt-get update -y
 apt-get upgrade -y
-
-
 
 echo "Lets remove bad and install good packages"
 
@@ -70,8 +112,6 @@ cat << EOF >> /etc/crontab
 
 EOF
 
-
-
 echo "Making .vimrc"
 
 cat << EOF >> ~/.vimrc
@@ -100,7 +140,6 @@ set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.i
 
 EOF
 
-
 echo "Disabling IPv6"
 
 echo "### Disable IPv6" >> /etc/sysctl.conf
@@ -122,50 +161,6 @@ updatedb
 
 echo "Disabling ufw"
 ufw disable
-
-echo "Cleaning local repo"
-
-R=$( lsb_release -c | awk '{print $2}' )
-if [ "$R" = "trusty" ] ; then 
-        echo "Ok, we have trusty here"
-mv /etc/apt/sources.list /etc/apt/sources.list-LOCAL
-
-echo "
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty main restricted
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty main restricted
-
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
-
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty universe
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty universe
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates universe
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates universe
-
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty multiverse
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty multiverse
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
-
-deb http://ru.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
-deb-src http://ru.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
-
-deb http://security.ubuntu.com/ubuntu trusty-security main restricted
-deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted
-deb http://security.ubuntu.com/ubuntu trusty-security universe
-deb-src http://security.ubuntu.com/ubuntu trusty-security universe
-deb http://security.ubuntu.com/ubuntu trusty-security multiverse
-deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
-
-deb http://archive.canonical.com/ubuntu trusty partner
-
-deb http://extras.ubuntu.com/ubuntu trusty main
-deb-src http://extras.ubuntu.com/ubuntu trusty main
-" > /etc/apt/sources.list
-
-else 
-        echo "Hmmm... Not trusty? Nadz?"
-fi
 
 
 echo "All done, folks!"
