@@ -293,3 +293,14 @@ Change rights to files and dirs
 
 find /storage/ -type d -print0 | xargs -0 chmod 755 
 find /storage/ -type f -print0 | xargs -0 chmod 644
+
+
+
+rsync parallel
+ls /srv/mail | xargs -n1 -P4 -I% rsync -Pa % myserver.com:/srv/mail/
+ls /srv/mail | parallel -v -j8 rsync -raz --progress {} myserver.com:/srv/mail/{}
+
+
+
+
+
